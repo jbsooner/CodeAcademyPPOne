@@ -1,5 +1,12 @@
 import pandas as pd
 from tabulate import tabulate
+import datetime
+
+
+print('The current data and time is: ', datetime.datetime.now())
+print('\n')
+print('==============================================================================================================================')
+print('Global Data')
 
 # 1. Find the average age across all data points -- done
 # 2. Find the average insurance cost across all data points -- done
@@ -36,9 +43,11 @@ global_list_total.append(tabulate_end_list)
 
 
 print(tabulate(global_list_total, headers=header_list_global, tablefmt='orgtbl'))
+print('==============================================================================================================================')
 
 print('\n')
-print('=======================================================================================================================')
+print('==============================================================================================================================')
+print('Data by Region')
 # Get the average of a column
 def average(item):
     average_item = df[item].mean()
@@ -89,3 +98,4 @@ for key in region_dict.keys():
     total_list.append(new_list)
 
 print(tabulate(total_list, headers=header_list, tablefmt='orgtbl'))
+print('==============================================================================================================================')
