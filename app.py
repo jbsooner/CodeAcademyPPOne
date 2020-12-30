@@ -15,10 +15,10 @@ header_list_global = ['Avg Age', 'Total Items', 'Total Smokers', 'Total Insuranc
 total_age_mean = round(df['age'].mean())
 total_items = df['region'].count()
 total_smokers = sum(df['smoker'] == 'yes')
-total_insurance_costs_global = round(df['charges'].sum())
+total_insurance_costs_global = round(df['charges'].sum(),2)
 total_bmi_global = round(df['bmi'].sum(), 2)
-total_avg_cost = total_insurance_costs_global / total_items
-total_avg_bmi = total_bmi_global / total_items
+total_avg_cost = round((total_insurance_costs_global / total_items),2)
+total_avg_bmi = round((total_bmi_global / total_items),2)
 
 global_list.append(total_age_mean)
 global_list.append(total_items)
@@ -28,10 +28,17 @@ global_list.append(total_bmi_global)
 global_list.append(total_avg_cost)
 global_list.append(total_avg_bmi)
 
-# print(tabulate(global_list, headers=header_list_global, tablefmt='orgtbl'))
+# Had to make this so I could use tabulate for a single item list / had to create a list of lists
+tabulate_end_list = ['x', 'x', 'x', 'x', 'x', 'x', 'x']
+global_list_total = []
+global_list_total.append(global_list)
+global_list_total.append(tabulate_end_list)
 
 
+print(tabulate(global_list_total, headers=header_list_global, tablefmt='orgtbl'))
 
+print('\n')
+print('=======================================================================================================================')
 # Get the average of a column
 def average(item):
     average_item = df[item].mean()
@@ -64,21 +71,8 @@ def region_data(which_region):
 
 
 region_count('region')
-# max_region = max(region_dict)
-# average_age = average('age')
-# average_cost = average('charges')
-
-# print('The average age of the dataset is: {}'.format(average_age))
-# print('The average insurance cost of the dataset is: {}'.format(average_cost))
-# print('The region with the most data points is: {}'.format(max_region))
 
 header_list = ['Region', 'Avg Age', 'Region Count', 'Smoker Count', 'Total Insurance Cost', 'Avg Cost', 'Avg BMI']
-
-
-
-
-
-
 
 total_list = []
 for key in region_dict.keys():
@@ -93,15 +87,5 @@ for key in region_dict.keys():
     new_list.append(region_data(key)[5])
     new_list.append(region_data(key)[6])
     total_list.append(new_list)
+
 print(tabulate(total_list, headers=header_list, tablefmt='orgtbl'))
-
-
-# import plotext as plt
-# import numpy as np
-
-# l = 1000
-# x = np.arange(0, l + 1)
-# f = 2 * np.pi / l
-# y = np.sin(2 * f * x)
-# plt.plot(x, y)
-# plt.show()
