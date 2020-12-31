@@ -76,14 +76,15 @@ def region_data(which_region):
     total_bmi = current_region['bmi'].sum()
     average_cost_region = total_insurance_costs / current_region_count
     average_bmi = total_bmi / current_region_count
+    average_children = current_region['children'].mean()
     
     
-    return which_region, current_region_mean_age, current_region_count, sum(smoker_count), round(total_insurance_costs), round(average_cost_region), round(average_bmi, 2)
+    return which_region, current_region_mean_age, current_region_count, sum(smoker_count), round(total_insurance_costs), round(average_cost_region), round(average_bmi, 2), round(average_children,2)
 
 
 region_count('region')
 
-header_list = ['Region', 'Avg Age', 'Region Count', 'Smoker Count', 'Total Insurance Cost', 'Avg Cost', 'Avg BMI']
+header_list = ['Region', 'Avg Age', 'Region Count', 'Smoker Count', 'Total Insurance Cost', 'Avg Cost', 'Avg BMI', 'Average Children']
 
 total_list = []
 for key in region_dict.keys():
@@ -97,6 +98,7 @@ for key in region_dict.keys():
     new_list.append(region_data(key)[4])
     new_list.append(region_data(key)[5])
     new_list.append(region_data(key)[6])
+    new_list.append(region_data(key)[7])
     total_list.append(new_list)
 
 print(tabulate(total_list, headers=header_list, tablefmt=tabul_format, floatfmt='.2f'))
@@ -152,3 +154,48 @@ print('The northeast has the second highest average cost due to having the secon
 print('The average age across all of the data is 39.')
 print('==============================================================================================================================')
 print('\n')
+
+def sort_by_col(column, value):
+    data_col = column
+    value_to_lookup = value
+    print('Global', value, 'Data')
+
+    # Create a smoker only dataframe
+    new_df = df[(df[data_col] == value_to_lookup)]
+
+
+# Create a global_list for the variables below to be appended to / created a header list for the tablulate table
+    global_list_smoker = []
+    header_list_global_smoker = ['Avg Age', 'Total Items', 'Total Smokers',
+                             'Total Insurance Costs', 'Total BMI', 'Total Avg Costs', 'Total Avg BMI']
+
+    # Get my variables to be appended to the global_list
+    total_age_mean_smoker = round(new_df['age'].mean())
+    total_items_smoker = new_df['region'].count()
+    total_smokers_smoker = sum(new_df['smoker'] == 'yes')
+    total_insurance_costs_global_smoker = round(new_df['charges'].sum(), 2)
+    total_bmi_global_smoker = round(new_df['bmi'].sum(), 2)
+    total_avg_cost_smoker = round((total_insurance_costs_global_smoker / total_items_smoker), 2)
+    total_avg_bmi_smoker = round((total_bmi_global_smoker / total_items_smoker), 2)
+
+    # Append my global variables to the global_list
+    global_list_smoker.append(total_age_mean_smoker)
+    global_list_smoker.append(total_items_smoker)
+    global_list_smoker.append(total_smokers_smoker)
+    global_list_smoker.append(total_insurance_costs_global_smoker)
+    global_list_smoker.append(total_bmi_global_smoker)
+    global_list_smoker.append(total_avg_cost_smoker)
+    global_list_smoker.append(total_avg_bmi_smoker)
+
+    # Had to make this so I could use tabulate for a single item list / had to create a list of lists
+    tabulate_end_list_smoker = ['x', 'x', 'x', 'x', 'x', 'x', 'x']
+    # Create a empty list to append the global list / tabulate_end_list to create the tabulate table
+    global_list_total_smoker = []
+    global_list_total_smoker.append(global_list_smoker)
+    global_list_total_smoker.append(tabulate_end_list_smoker)
+
+    # print out the tabulate table
+    print(tabulate(global_list_total_smoker, headers=header_list_global_smoker, tablefmt=tabul_format, floatfmt='.2f'))
+    print('==============================================================================================================================')
+
+sort_by_col('sex', 'male')
