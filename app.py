@@ -1,6 +1,7 @@
 import pandas as pd
 from tabulate import tabulate
 import datetime
+import plotly.express as px
 
 df = pd.read_csv('insurance.csv')
 
@@ -125,4 +126,68 @@ sort_by_col('region', 'southwest')
 sort_by_col('region', 'northwest')
 sort_by_col('sex', 'female')
 sort_by_col('sex', 'male')
-sort_by_col('children',3)
+
+baby_boomers = [56,74]
+gen_x = [40, 55]
+millennials = [24,39]
+gen_z = [8,23]
+
+results_dict_age = {}
+
+print('===============================================================================================================')
+
+def age_function(generation, gen_name):
+    print(gen_name + ' Data')
+    age_range = df[df['age'].between(generation[0], generation[1], inclusive=True)]
+    # Create a global_list for the variables below to be appended to / created a header list for the tablulate table
+    list_item = []
+    header_list_global_age = ['Avg Age', 'Total Items', 'Total Smokers',
+                             'Total Insurance Costs', 'Total BMI', 'Total Avg Costs', 'Total Avg BMI']
+
+    # Get my variables to be appended to the global_list
+    age_mean_age = round(age_range['age'].mean())
+    items_total_age = age_range['region'].count()
+    age_item_total = sum(age_range['smoker'] == 'yes')
+    item_total_cost_age = round(age_range['charges'].sum(), 2)
+    item_bmi_total_age = round(age_range['bmi'].sum(), 2)
+    item_avg_cost_age = round((item_total_cost_age / items_total_age), 2)
+    item_avg_bmi_age = round((item_bmi_total_age / items_total_age), 2)
+
+    # Append my global variables to the global_list
+    list_item.append(age_mean_age)
+    list_item.append(items_total_age)
+    list_item.append(age_item_total)
+    list_item.append(item_total_cost_age)
+    list_item.append(item_bmi_total_age)
+    list_item.append(item_avg_cost_age)
+    list_item.append(item_avg_bmi_age)
+
+    # Had to make this so I could use tabulate for a single item list / had to create a list of lists
+    tabulate_end_list_age = ['x', 'x', 'x', 'x', 'x', 'x', 'x']
+    # Create a empty list to append the global list / tabulate_end_list to create the tabulate table
+    tabulate_list_age = []
+    tabulate_list_age.append(list_item)
+    tabulate_list_age.append(tabulate_end_list_age)
+    
+    data_dict_age = {gen_name:[age_mean_age, items_total_age, age_item_total, item_total_cost_age, item_bmi_total_age, item_avg_cost_age, item_avg_bmi_age]}
+    results_dict_age.update(data_dict_age)
+
+    # print out the tabulate table
+    print(tabulate(tabulate_list_age, headers=header_list_global_age, tablefmt=tabul_format, floatfmt='.2f'))
+    print('===============================================================================================================')
+
+age_function(baby_boomers, 'Baby Boomer')    
+age_function(gen_x, 'Generation X')
+age_function(millennials, 'Millennial')
+age_function(gen_z, 'Generation Z')
+
+key_dict_age = []
+value_avg_age = []
+
+for key, value in results_dict_age.items():
+    key_dict_age.append(key)
+    value_avg_age.append(value[2])
+
+
+fig = px.bar(x=key_dict_age, y=value_avg_age)
+fig.show()
