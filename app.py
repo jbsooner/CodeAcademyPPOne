@@ -174,6 +174,10 @@ def age_function(generation, gen_name):
 
     # print out the tabulate table
     print(tabulate(tabulate_list_age, headers=header_list_global_age, tablefmt=tabul_format, floatfmt='.2f'))
+    
+    fig = px.bar(age_range, x='age', y='charges', color='region')
+    fig.show()
+    
     print('===============================================================================================================')
 
 age_function(baby_boomers, 'Baby Boomer')    
@@ -189,5 +193,5 @@ for key, value in results_dict_age.items():
     value_avg_age.append(value[2])
 
 
-fig = px.bar(x=key_dict_age, y=value_avg_age)
-fig.show()
+
+
